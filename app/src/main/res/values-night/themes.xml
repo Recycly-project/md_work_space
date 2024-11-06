@@ -1,5 +1,10 @@
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
+
+        // statusbar color
+        <item name="android:statusBarColor">@android:color/background_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -46,5 +51,9 @@
         <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
         <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
     </style>
 </resources>

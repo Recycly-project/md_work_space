@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Recycly</string>
+
+    <string name="bottom_home">Beranda</string>
+    <string name="bottom_history">Riwayat</string>
+    <string name="bottom_point">Poin</string>
+    <string name="bottom_user_profile">Profil</string>
+
 </resources>
