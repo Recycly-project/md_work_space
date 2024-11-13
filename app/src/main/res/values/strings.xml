@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">Recycly</string>
 
-    <string name="bottom_home">Beranda</string>
-    <string name="bottom_history">Riwayat</string>
-    <string name="bottom_point">Poin</string>
-    <string name="bottom_user_profile">Profil</string>
+    <string name="bottom_home">Home</string>
+    <string name="bottom_home_title">Dashboard</string>
+    <string name="bottom_history">History</string>
+    <string name="bottom_point">Point</string>
+    <string name="bottom_user_profile">Profile</string>
+
+    <!-- Fragment home   -->
+    <string name="your_points_title">Your Points</string>
+    <string name="desposit_trash_title">Desposit Your Trash</string>
+    <string name="scan_trash_title">Scan Trash Image</string>
+    <string name="history_title">History</string>
 
 </resources>

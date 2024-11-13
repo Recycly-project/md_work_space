@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.koaladev.recycly.fragment.HomeFragment"
+        android:name="com.koaladev.recycly.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/pointFragment"
-        android:name="com.koaladev.recycly.fragment.PointFragment"
-        android:label="fragment_point"
-        tools:layout="@layout/fragment_point" />
-    <fragment
         android:id="@+id/historyFragment"
-        android:name="com.koaladev.recycly.fragment.HistoryFragment"
+        android:name="com.koaladev.recycly.ui.fragment.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history" />
     <fragment
-        android:id="@+id/userProfileFragment"
-        android:name="com.koaladev.recycly.fragment.UserProfileFragment"
-        android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        android:id="@+id/pointFragment"
+        android:name="com.koaladev.recycly.ui.fragment.PointFragment"
+        android:label="fragment_point"
+        tools:layout="@layout/fragment_point" />
+    <activity
+        android:id="@+id/profileActivity"
+        android:name="com.koaladev.recycly.ui.activity.ProfileActivity"
+        android:label="activity_profile"
+        tools:layout="@layout/activity_profile" />
 </navigation>

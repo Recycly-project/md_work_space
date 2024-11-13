@@ -1,22 +1,26 @@
-package com.koaladev.recycly.ui
+package com.koaladev.recycly.ui.activity
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.koaladev.recycly.R
 import com.koaladev.recycly.databinding.ActivityMainBinding
+import com.koaladev.recycly.helper.ToolbarTitleUpdater
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ToolbarTitleUpdater {
 
-    // initialize view binding
     private lateinit var binding: ActivityMainBinding
-    // inittialize navController
     private lateinit var navController: NavController
+    private lateinit var toolbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +28,30 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+
         setupEdgeToEdge()
         setupNavigation()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.userProfileFragment -> {
+                navController.navigate(R.id.profileActivity)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun updateToolbarTitle(title: String) {
+        toolbar.title = title
     }
 
     private fun setupEdgeToEdge() {
@@ -44,8 +70,21 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         binding.bottomNavbar.setupWithNavController(navController)
 
+        navController.addOnDestinationChangedListener{ _, destination, _ ->
+            updateToolbarTitleDestination(destination)
+        }
         // soon handle reselection to prevent unnecessary navigation
         binding.bottomNavbar.setOnItemReselectedListener { /* Do nothing */ }
+    }
+
+    private fun updateToolbarTitleDestination(destination: NavDestination) {
+        val title = when (destination.id) {
+            R.id.homeFragment -> getString(R.string.bottom_home_title)
+            R.id.historyFragment -> getString(R.string.bottom_history)
+            R.id.pointFragment -> getString(R.string.bottom_point)
+            else -> getString(R.string.app_name)
+        }
+        updateToolbarTitle(title)
     }
 
 }

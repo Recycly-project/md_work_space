@@ -1,4 +1,4 @@
-package com.koaladev.recycly.fragment
+package com.koaladev.recycly.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,5 +18,11 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.tvPointsValue.text = "150"
     }
 }

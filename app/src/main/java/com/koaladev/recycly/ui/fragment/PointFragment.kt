@@ -1,23 +1,22 @@
-package com.koaladev.recycly.fragment
+package com.koaladev.recycly.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.koaladev.recycly.R
-import com.koaladev.recycly.databinding.FragmentUserProfileBinding
+import com.koaladev.recycly.databinding.FragmentPointBinding
 
-class UserProfileFragment : Fragment() {
+class PointFragment : Fragment() {
 
-    private lateinit var _binding: FragmentUserProfileBinding
+    private lateinit var _binding: FragmentPointBinding
     private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUserProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentPointBinding.inflate(inflater, container, false)
         return binding.root
     }
 }

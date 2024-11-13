@@ -1,4 +1,4 @@
-package com.koaladev.recycly.viewmodel
+package com.koaladev.recycly.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 

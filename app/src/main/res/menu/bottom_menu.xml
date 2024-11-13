@@ -5,15 +5,11 @@
         android:title="@string/bottom_home"
         android:icon="@drawable/ic_home"/>
     <item
-        android:id="@+id/pointFragment"
-        android:title="@string/bottom_point"
-        android:icon="@drawable/ic_cash"/>
-    <item
         android:id="@+id/historyFragment"
         android:title="@string/bottom_history"
         android:icon="@drawable/ic_history"/>
     <item
-        android:id="@+id/userProfileFragment"
-        android:title="@string/bottom_user_profile"
-        android:icon="@drawable/ic_user_profile"/>
+        android:id="@+id/pointFragment"
+        android:title="@string/bottom_point"
+        android:icon="@drawable/ic_cash"/>
 </menu>
