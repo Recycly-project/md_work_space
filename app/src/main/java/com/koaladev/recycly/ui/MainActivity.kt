@@ -5,17 +5,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.koaladev.recycly.R
 import com.koaladev.recycly.databinding.ActivityMainBinding
-import com.koaladev.recycly.fragment.HistoryFragment
-import com.koaladev.recycly.fragment.HomeFragment
-import com.koaladev.recycly.fragment.PointFragment
-import com.koaladev.recycly.fragment.UserProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
