@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.koaladev.recycly.ui.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_scanActivity"
+            app:destination="@id/scanActivity" />
+    </fragment>
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.koaladev.recycly.ui.fragment.HistoryFragment"
@@ -25,4 +29,9 @@
         android:name="com.koaladev.recycly.ui.activity.ProfileActivity"
         android:label="activity_profile"
         tools:layout="@layout/activity_profile" />
+    <activity
+        android:id="@+id/scanActivity"
+        android:name="com.koaladev.recycly.ui.activity.ScanActivity"
+        android:label="activity_scan"
+        tools:layout="@layout/activity_scan" />
 </navigation>

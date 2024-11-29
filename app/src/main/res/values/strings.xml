@@ -12,5 +12,6 @@
     <string name="desposit_trash_title">Desposit Your Trash</string>
     <string name="scan_trash_title">Scan Trash Image</string>
     <string name="history_title">History</string>
+    <string name="take_photo">Ambil foto</string>
 
 </resources>

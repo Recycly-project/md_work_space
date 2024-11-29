@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.koaladev.recycly.R
 import com.koaladev.recycly.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -24,5 +26,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvPointsValue.text = "150"
+        binding.btnScanTrash.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_scanActivity)
+        }
     }
 }
