@@ -16,7 +16,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-       buildConfigField("String", "BASE_URL", "\"https://example.com/api\"")
+       buildConfigField("String", "BASE_URL", "\"https://ml-prediction-api-412072547738.asia-southeast2.run.app\"")
     }
 
     buildTypes {
@@ -38,6 +38,8 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        //noinspection DataBindingWithoutKapt
+        dataBinding = true
     }
 }
 
@@ -51,6 +53,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -67,4 +70,9 @@ dependencies {
     implementation ( "androidx.camera:camera-video:${camerax_version}")
     implementation ("androidx.camera:camera-view:${camerax_version}")
     implementation ("androidx.camera:camera-extensions:${camerax_version}")
+
+    // networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.logging.interceptor)
 }
