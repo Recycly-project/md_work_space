@@ -109,8 +109,19 @@ class ScanActivity : AppCompatActivity() {
 
     private fun showResultDialog(response: UploadResponse) {
         try {
+            val earnedPoints = response.points ?: 0
+            viewModel.addPoints(earnedPoints)
+
+            val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+                putInt("POINTS", viewModel.points.value ?: 0)
+                apply()
+            }
+
+            Log.d("ScanActivity", "Points added: $earnedPoints, Total: ${viewModel.points.value}")
+
             val message = "Status: ${response.label}\n" +
-                "Point: ${response.points}\n"
+                "Point: $earnedPoints"
 
 
             AlertDialog.Builder(this)
