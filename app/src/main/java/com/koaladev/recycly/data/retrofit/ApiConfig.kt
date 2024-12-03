@@ -20,7 +20,7 @@ object ApiConfig {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    val instance: ApiService by lazy {
+    private val instance: ApiService by lazy {
         Retrofit.Builder()
            .baseUrl(BASE_URL)
            .client(client)
@@ -28,4 +28,6 @@ object ApiConfig {
            .build()
            .create(ApiService::class.java)
     }
+
+    fun getApiService(): ApiService = instance
 }
