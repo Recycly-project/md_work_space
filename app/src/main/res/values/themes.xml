@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
@@ -52,5 +53,10 @@
         <item name="itemIconTint">#FFFFFF</item>
         <item name="android:color">?attr/colorPrimaryContainer</item>
         <item name="android:alpha">1.0</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 </resources>

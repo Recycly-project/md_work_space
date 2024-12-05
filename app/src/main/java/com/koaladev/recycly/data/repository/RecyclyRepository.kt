@@ -7,6 +7,10 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import com.koaladev.recycly.data.response.RegisterResponse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class RecyclyRepository(
     private val apiService: ApiService
@@ -35,6 +39,34 @@ class RecyclyRepository(
                 Result.failure(e)
             }
         }
+
+    suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): Result<RegisterResponse> {
+        return try {
+            val ktpRequestBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())
+            val ktpPart = MultipartBody.Part.createFormData("ktp", ktp.name, ktpRequestBody)
+
+            val response = apiService.register(
+                email = email.toRequestBody("text/plain".toMediaTypeOrNull()),
+                password = password.toRequestBody("text/plain".toMediaTypeOrNull()),
+                fullName = fullName.toRequestBody("text/plain".toMediaTypeOrNull()),
+                address = address.toRequestBody("text/plain".toMediaTypeOrNull()),
+                ktp = ktpPart
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body)
+                } else {
+                    Result.failure(Exception("Response body is null"))
+                }
+            } else {
+                Result.failure(Exception("Registration failed: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     companion object {
         @Volatile
