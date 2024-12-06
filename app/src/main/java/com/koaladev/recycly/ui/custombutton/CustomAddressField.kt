@@ -26,7 +26,7 @@ class CustomAddressField : AppCompatEditText {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 error = if (s.isNullOrEmpty()) {
-                    "Nama tidak boleh kosong"
+                    "Address should not be empty!"
                 } else {
                     null
                 }

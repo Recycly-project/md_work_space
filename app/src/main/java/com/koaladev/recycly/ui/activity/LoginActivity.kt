@@ -54,5 +54,9 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnRegister.setOnClickListener{
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
 }

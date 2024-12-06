@@ -25,7 +25,7 @@ class CustomEmailField: AppCompatEditText {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 error = if (!s.isNullOrEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    "Format email salah"
+                    "Wrong email format!"
                 } else {
                     null
                 }

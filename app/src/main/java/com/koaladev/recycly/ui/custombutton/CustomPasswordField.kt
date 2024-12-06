@@ -26,7 +26,7 @@ class CustomPasswordField: AppCompatEditText {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 error = if (!s.isNullOrEmpty() && s.length < 8) {
-                    "Password tidak boleh kurang dari 8 karakter!"
+                    "Password must be at least 8 characters!"
                 } else {
                     null
                 }
