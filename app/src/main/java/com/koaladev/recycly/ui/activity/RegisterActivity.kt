@@ -45,16 +45,20 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnRegister.setOnClickListener { registerUser() }
 
         viewModel.registerResult.observe(this) { result ->
-            result.fold(
-                onSuccess = {
+            when (result.status) {
+                "success" -> {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                },
-                onFailure = { error ->
-                    Toast.makeText(this, "Registration failed: ${error.message}", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
-            )
+                "fail" -> {
+                    Toast.makeText(this, "Registration failed: ${result.message}", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Unknown error occurred", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.koaladev.recycly.data.retrofit
 
+import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.RegisterResponse
 import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.data.response.UploadWasteCollectionResponse
@@ -7,6 +8,8 @@ import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -26,5 +29,12 @@ interface ApiService{
         @Part("fullName") fullName: RequestBody,
         @Part("address") address: RequestBody,
         @Part ktp: MultipartBody.Part
-    ): Response<RegisterResponse>
+    ): RegisterResponse
+
+    @FormUrlEncoded
+    @POST("auth/login")
+    suspend fun login(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): LoginResponse
 }
