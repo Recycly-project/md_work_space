@@ -13,6 +13,7 @@
     <string name="scan_trash_title">Scan Trash Image</string>
     <string name="history_title">History</string>
     <string name="take_photo">Ambil foto</string>
+<<<<<<< HEAD
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -70,5 +71,10 @@
     <string name="prompt_password">Password</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="login_failed">"Login failed"</string>
+=======
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+>>>>>>> 17d7e2f (Add widget)
 
 </resources>
