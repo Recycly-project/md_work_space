@@ -13,5 +13,8 @@
     <string name="scan_trash_title">Scan Trash Image</string>
     <string name="history_title">History</string>
     <string name="take_photo">Ambil foto</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
 
 </resources>
