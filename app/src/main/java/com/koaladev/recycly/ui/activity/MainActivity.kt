@@ -7,14 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.koaladev.recycly.R
+import com.koaladev.recycly.data.repository.RecyclyRepository
+import com.koaladev.recycly.data.repository.SessionPreferences
+import com.koaladev.recycly.data.retrofit.ApiConfigAuth
 import com.koaladev.recycly.databinding.ActivityMainBinding
 import com.koaladev.recycly.helper.ToolbarTitleUpdater
+import com.koaladev.recycly.ui.viewmodel.LoginViewModel
+import com.koaladev.recycly.ui.viewmodel.LoginViewModelFactory
 
 class MainActivity : AppCompatActivity(), ToolbarTitleUpdater {
 

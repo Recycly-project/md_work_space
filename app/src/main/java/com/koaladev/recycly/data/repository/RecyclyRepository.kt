@@ -1,5 +1,6 @@
 package com.koaladev.recycly.data.repository
 
+import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.data.response.UploadWasteCollectionResponse
 import com.koaladev.recycly.data.retrofit.ApiService
@@ -11,6 +12,7 @@ import com.koaladev.recycly.data.response.RegisterResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 
 class RecyclyRepository(
     private val apiService: ApiService
@@ -40,32 +42,21 @@ class RecyclyRepository(
             }
         }
 
-    suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): Result<RegisterResponse> {
-        return try {
-            val ktpRequestBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())
-            val ktpPart = MultipartBody.Part.createFormData("ktp", ktp.name, ktpRequestBody)
+    suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): RegisterResponse {
+        val ktpRequestBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())
+        val ktpPart = MultipartBody.Part.createFormData("ktp", ktp.name, ktpRequestBody)
 
-            val response = apiService.register(
-                email = email.toRequestBody("text/plain".toMediaTypeOrNull()),
-                password = password.toRequestBody("text/plain".toMediaTypeOrNull()),
-                fullName = fullName.toRequestBody("text/plain".toMediaTypeOrNull()),
-                address = address.toRequestBody("text/plain".toMediaTypeOrNull()),
-                ktp = ktpPart
-            )
+        return apiService.register(
+            email = email.toRequestBody("text/plain".toMediaTypeOrNull()),
+            password = password.toRequestBody("text/plain".toMediaTypeOrNull()),
+            fullName = fullName.toRequestBody("text/plain".toMediaTypeOrNull()),
+            address = address.toRequestBody("text/plain".toMediaTypeOrNull()),
+            ktp = ktpPart
+        )
+    }
 
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    Result.success(body)
-                } else {
-                    Result.failure(Exception("Response body is null"))
-                }
-            } else {
-                Result.failure(Exception("Registration failed: ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun login(email: String, password: String): LoginResponse {
+        return apiService.login(email, password)
     }
 
     companion object {
