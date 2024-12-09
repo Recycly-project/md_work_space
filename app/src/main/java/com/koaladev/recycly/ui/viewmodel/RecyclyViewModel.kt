@@ -68,6 +68,22 @@ class RecyclyViewModel(
 
     }
 
+    fun minsPoints(newPoints: Int) {
+        val currentPoints = _points.value ?: 0
+        val updatedPoints = currentPoints - newPoints
+        _points.value = updatedPoints
+        Log.d("RecyclyViewModel", "Points added: $newPoints, Total: $updatedPoints")
+
+        val sharedPref = getApplication<Application>().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putInt("POINTS", updatedPoints)
+            apply()
+        }
+
+        Log.d("RecyclyViewModel", "Points added: $newPoints, Total: $updatedPoints")
+
+    }
+
     fun refreshPoints() {
         val sharedPref = getApplication<Application>().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedPoints = sharedPref.getInt("POINTS", 0)
