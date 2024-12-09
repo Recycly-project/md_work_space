@@ -24,7 +24,6 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
         ViewModelFactory.getInstance(this)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,6 +47,9 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
             if (!user.isLogin) {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+            } else {
+                binding.nameTextView.text = user.name
+                binding.emailTextView.text = user.email
             }
         }
     }
