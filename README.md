@@ -31,3 +31,4 @@ git clone https://github.com/Recycly-project/md_work_space.git -b main
 - [CameraX](https://developer.android.com/media/camera/camerax): CameraX is a Jetpack library, built to help make camera app development easier. For new apps, we recommend starting with CameraX. It provides a consistent, easy-to-use API that works across the vast majority of Android devices, with backward-compatibility to Android 5.0 (API level 21).
 - [Navigation](https://developer.android.com/guide/navigation): Navigation refers to the interactions that let users navigate across, into, and back out from the different pieces of content within your app.
 - [KTLoading Button](https://github.com/timonknispel/KTLoadingButton): Simple loading button for kotlin andorid apps.
+- [Lottie Android](https://github.com/airbnb/lottie-android): Render After Effects animations natively on Android and iOS, Web, and React Native
