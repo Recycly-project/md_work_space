@@ -21,7 +21,7 @@ import retrofit2.http.Path
 
 interface ApiService{
     @Multipart
-    @POST("verifyWasteCollection")
+    @POST("/verifyWasteCollection")
     suspend fun uploadWasteCollection(
         @Part image: MultipartBody.Part
     ): Response<UploadResponse>

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(name = "session")
@@ -40,6 +41,14 @@ class SessionPreferences private constructor(private val dataStore: DataStore<an
         dataStore.edit { preferences ->
             preferences.clear()
         }
+    }
+
+    suspend fun getUserId(): String {
+        return dataStore.data.first()[USER_ID] ?: ""
+    }
+
+    suspend fun getToken(): String {
+        return dataStore.data.first()[TOKEN_KEY] ?: ""
     }
 
     companion object {

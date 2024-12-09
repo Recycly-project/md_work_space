@@ -61,7 +61,8 @@ class RecyclyRepository(
     }
 
     suspend fun getWasteCollections(userId: String, token: String): GetWasteCollectionResponse {
-        return apiService.getWasteCollections(userId, token)
+        val user_token = "Bearer $token"
+        return apiService.getWasteCollections(userId, user_token)
     }
 
     companion object {
