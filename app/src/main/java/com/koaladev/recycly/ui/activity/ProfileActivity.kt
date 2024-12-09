@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import com.google.android.material.appbar.MaterialToolbar
 import com.koaladev.recycly.R
 import com.koaladev.recycly.data.repository.RecyclyRepository
@@ -35,6 +36,17 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
         val repository = RecyclyRepository.getInstance(apiService)
         val sessionPreferences = SessionPreferences.getInstance(applicationContext)
         val factory = LoginViewModelFactory(repository, sessionPreferences)
+        // debug
+        sessionPreferences.getSession().asLiveData().observe(this) { userSession ->
+            val userInfo = """
+                User: ${userSession.userFullName}
+                Email: ${userSession.userEmail}
+                ID: ${userSession.userId}
+            """.trimIndent()
+
+            binding.bioTextView.text = userInfo
+        }
+
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
 
         toolbar = binding.toolbar

@@ -30,7 +30,8 @@ class LoginViewModel(
             try {
                 val response = repository.login(email, password)
                 if (response.status == "success") {
-                    sessionPreferences.saveSession(response.data.token)
+                    sessionPreferences.saveSession(response.data.token, response.data.user.id, response.data.user.email, response.data.user.fullName, response.data
+                        .user.isAdmin)
                     _loginResult.value = Result.success(response)
                 } else {
                     _loginResult.value = Result.failure(Exception(response.message))

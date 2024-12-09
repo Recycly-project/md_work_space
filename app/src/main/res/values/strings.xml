@@ -13,7 +13,6 @@
     <string name="scan_trash_title">Scan Trash Image</string>
     <string name="history_title">History</string>
     <string name="take_photo">Ambil foto</string>
-<<<<<<< HEAD
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

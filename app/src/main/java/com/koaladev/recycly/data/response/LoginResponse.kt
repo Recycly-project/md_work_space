@@ -7,5 +7,13 @@ data class LoginResponse(
 )
 
 data class TokenResponse(
-	val token: String
+	val token: String,
+	val user: UserData
+)
+
+data class UserData(
+    val id: String,
+    val email: String,
+	val fullName: String,
+	val isAdmin: Boolean
 )

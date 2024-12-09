@@ -13,10 +13,13 @@ val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences
 
 class SessionPreferences private constructor(private val dataStore: DataStore<androidx.datastore.preferences.core.Preferences>) {
 
-    suspend fun saveSession(token: String) {
+    suspend fun saveSession(token: String, userId: String, userEmail: String, userFullName: String, isAdmin: Boolean) {
         dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = token
             preferences[LOGIN_STATE] = true
+            preferences[USER_ID] = userId
+            preferences[USER_EMAIL] = userEmail
+            preferences[USER_FULLNAME] = userFullName
         }
     }
 
@@ -24,7 +27,11 @@ class SessionPreferences private constructor(private val dataStore: DataStore<an
         return dataStore.data.map { preferences ->
             UserSession(
                 token = preferences[TOKEN_KEY] ?: "",
-                isLogin = preferences[LOGIN_STATE] ?: false
+                isLogin = preferences[LOGIN_STATE] ?: false,
+                userId = preferences[USER_ID]?: "",
+                userEmail = preferences[USER_EMAIL]?: "",
+                userFullName = preferences[USER_FULLNAME]?: "",
+                isAdmin = preferences[USER_ADMIN]?: false,
             )
         }
     }
@@ -41,6 +48,10 @@ class SessionPreferences private constructor(private val dataStore: DataStore<an
 
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val LOGIN_STATE = booleanPreferencesKey("login_state")
+        private val USER_ID = stringPreferencesKey("user_id")
+        private val USER_EMAIL = stringPreferencesKey("user_email")
+        private val USER_FULLNAME = stringPreferencesKey("user_fullname")
+        private val USER_ADMIN = booleanPreferencesKey("user_admin")
 
         fun getInstance(context: Context): SessionPreferences {
             return INSTANCE ?: synchronized(this) {
@@ -54,5 +65,9 @@ class SessionPreferences private constructor(private val dataStore: DataStore<an
 
 data class UserSession(
     val token: String,
-    val isLogin: Boolean
+    val isLogin: Boolean,
+    val userId: String,
+    val userEmail: String,
+    val userFullName: String,
+    val isAdmin: Boolean
 )

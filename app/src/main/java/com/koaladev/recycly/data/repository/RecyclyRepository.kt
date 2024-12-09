@@ -1,5 +1,6 @@
 package com.koaladev.recycly.data.repository
 
+import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.data.response.UploadWasteCollectionResponse
@@ -57,6 +58,10 @@ class RecyclyRepository(
 
     suspend fun login(email: String, password: String): LoginResponse {
         return apiService.login(email, password)
+    }
+
+    suspend fun getWasteCollections(userId: String, token: String): GetWasteCollectionResponse {
+        return apiService.getWasteCollections(userId, token)
     }
 
     companion object {
