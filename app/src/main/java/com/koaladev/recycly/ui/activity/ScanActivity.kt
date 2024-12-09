@@ -4,6 +4,10 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,12 +18,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.objects.DetectedObject
+import com.google.mlkit.vision.objects.ObjectDetection
+import com.google.mlkit.vision.objects.ObjectDetector
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.databinding.ActivityScanBinding
 import com.koaladev.recycly.ui.viewmodel.RecyclyViewModel
@@ -38,12 +50,19 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
     private lateinit var cameraExecutor: ExecutorService
     private var imageCapture: ImageCapture? = null
+    private lateinit var objectDetector: ObjectDetector
+    private lateinit var analysisExecutor: ExecutorService
 
+    @ExperimentalGetImage
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         outputDirectory = getOutputDirectory(this)
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Inisialisasi executor di sini, sebelum digunakan
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        analysisExecutor = Executors.newSingleThreadExecutor()
 
         if (allPermissionsGranted()) {
             startCamera()
@@ -52,8 +71,48 @@ class ScanActivity : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
+        setupObjectDetector()
+        setupCamera()
+
         binding.imageCaptureButton.setOnClickListener { takePhoto() }
-        cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+
+    private fun setupObjectDetector() {
+        val options = ObjectDetectorOptions.Builder()
+            .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
+            .enableMultipleObjects()
+            .enableClassification()
+            .build()
+        objectDetector = ObjectDetection.getClient(options)
+    }
+
+    @ExperimentalGetImage
+    private fun setupCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+            }
+
+            imageCapture = ImageCapture.Builder().build()
+
+            val imageAnalyzer = ImageAnalysis.Builder().build().also { analysis ->
+                analysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                    processImageProxy(imageProxy)
+                }
+            }
+
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageCapture, imageAnalyzer
+                )
+            } catch (exc: Exception) {
+                Log.e("ScanActivity", "Use case binding failed", exc)
+            }
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun takePhoto() {
@@ -152,8 +211,46 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
+    @ExperimentalGetImage
+    private fun processImageProxy(imageProxy: ImageProxy) {
+        val mediaImage = imageProxy.image
+        if (mediaImage != null) {
+            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+            objectDetector.process(image)
+                .addOnSuccessListener { detectedObjects ->
+                    updateOverlay(detectedObjects)
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ScanActivity", "Object detection failed: ${e.message}")
+                }
+                .addOnCompleteListener {
+                    imageProxy.close()
+                }
+        }
+    }
+
+    private fun updateOverlay(detectedObjects: List<DetectedObject>) {
+        val overlay = binding.overlayView
+        overlay.clear()
+        for (obj in detectedObjects) {
+            val rect = obj.boundingBox
+            overlay.drawBoundingBox(Rect(rect.left, rect.top, rect.right, rect.bottom))
+        }
+    }
+
+
+    @ExperimentalGetImage
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+
+        val imageAnalyzer = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also { analysis ->
+                analysis.setAnalyzer(analysisExecutor) { imageProxy ->
+                    processImageProxy(imageProxy)
+                }
+            }
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -170,8 +267,7 @@ class ScanActivity : AppCompatActivity() {
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
-
+                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
@@ -184,6 +280,7 @@ class ScanActivity : AppCompatActivity() {
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    @ExperimentalGetImage
     @SuppressLint("MissingSuperCall")
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
@@ -203,6 +300,7 @@ class ScanActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+        analysisExecutor.shutdown()
     }
 
     companion object {
