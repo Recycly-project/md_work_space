@@ -34,6 +34,14 @@
         </receiver>
 
         <activity
+            android:name=".ui.activity.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="false" />
         <activity
@@ -47,13 +55,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

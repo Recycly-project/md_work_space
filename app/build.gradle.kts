@@ -80,4 +80,5 @@ dependencies {
 
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation(libs.ktloadingbutton)
+    implementation("com.airbnb.android:lottie:5.2.0")
 }
