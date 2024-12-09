@@ -1,19 +1,24 @@
 package com.koaladev.recycly.ui.viewmodel
 
 import android.app.Application
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.koaladev.recycly.R
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.data.repository.WasteRepository
 import com.koaladev.recycly.data.response.UploadResponse
+import com.koaladev.recycly.widget.PointsWidget
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -65,7 +70,7 @@ class RecyclyViewModel(
         }
 
         Log.d("RecyclyViewModel", "Points added: $newPoints, Total: $updatedPoints")
-
+        updateWidget(getApplication<Application>())
     }
 
     fun minsPoints(newPoints: Int) {
@@ -81,7 +86,7 @@ class RecyclyViewModel(
         }
 
         Log.d("RecyclyViewModel", "Points added: $newPoints, Total: $updatedPoints")
-
+        updateWidget(getApplication<Application>())
     }
 
     fun refreshPoints() {
@@ -109,6 +114,18 @@ class RecyclyViewModel(
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+
+    private fun updateWidget(context: Context) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(
+            ComponentName(context, PointsWidget::class.java)
+        )
+        for (appWidgetId in appWidgetIds) {
+            val views = RemoteViews(context.packageName, R.layout.points_widget)
+            views.setTextViewText(R.id.tv_points_value, _points.value.toString())
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 }
