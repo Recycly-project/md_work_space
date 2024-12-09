@@ -9,11 +9,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import com.koaladev.recycly.data.pref.UserPreference
+import com.koaladev.recycly.data.pref.dataStore
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.data.retrofit.ApiConfig
 import com.koaladev.recycly.data.retrofit.ApiConfigAuth
@@ -31,35 +34,25 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var viewModel: RegisterViewModel
     private var currentPhotoPath: String? = null
+    private lateinit var repository: RecyclyRepository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val apiService = ApiConfigAuth.getApiService()
-        val repository = RecyclyRepository.getInstance(apiService)
+
+        repository = RecyclyRepository.getInstance(
+            UserPreference.getInstance(dataStore),
+            ApiConfigAuth.getApiService()
+        )
         viewModel = ViewModelProvider(this, RegisterViewModelFactory(repository))[RegisterViewModel::class.java]
+
 
         binding.btnCaptureKtp.setOnClickListener { captureKtp() }
         binding.btnRegister.setOnClickListener { registerUser() }
 
-        viewModel.registerResult.observe(this) { result ->
-            when (result.status) {
-                "success" -> {
-                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                "fail" -> {
-                    Toast.makeText(this, "Registration failed: ${result.message}", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(this, "Unknown error occurred", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 
     private fun captureKtp() {
@@ -98,13 +91,38 @@ class RegisterActivity : AppCompatActivity() {
         val address = binding.etAddress.text.toString()
 
         if (email.isEmpty() || password.isEmpty() || fullName.isEmpty() || address.isEmpty() || currentPhotoPath == null) {
-            Toast.makeText(this, "Please fill all fields and capture KTP image", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
         val ktpFile = File(currentPhotoPath!!)
         val compressedKtpFile = compressImage(ktpFile)
         viewModel.register(email, password, fullName, address, compressedKtpFile)
+        viewModel.registerResult.observe(this) { result ->
+            when (result.status) {
+                "success" -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("Yeah!")
+                        .setMessage("Account for $email successfully created, please Login now!")
+                        .setPositiveButton("OK") { _, _ ->
+                            finish()
+                        }
+                        .create()
+                        .show()
+                }
+                "fail" -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("Oops!")
+                        .setMessage("Registration failed: ${result.message}")
+                        .setPositiveButton("OK", null)
+                        .create()
+                        .show()
+                }
+                else -> {
+                    Toast.makeText(this, "Unknown error occurred", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun compressImage(file: File): File {
@@ -141,6 +159,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {

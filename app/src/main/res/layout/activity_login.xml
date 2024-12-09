@@ -92,13 +92,16 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Login Button -->
-                <com.google.android.material.button.MaterialButton
+                <de.timonknispel.ktloadingbutton.KTLoadingButton
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorPrimaryContainer"
-                    android:text="@string/login_title"
-                    app:cornerRadius="8dp" />
+                    app:buttonName="@string/login_title"
+                    app:cornerRadius="8dp"
+                    app:allCaps="false"
+                    app:border_thickness="1dp"
+                    app:buttonColor="?attr/colorPrimaryContainer"/>
 
                 <!-- Divider -->
                 <TextView
@@ -117,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorSecondaryContainer"
                     android:text="@string/register"
-                    app:cornerRadius="8dp" />
+                    app:cornerRadius="16dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

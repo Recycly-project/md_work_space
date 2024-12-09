@@ -1,5 +1,6 @@
 package com.koaladev.recycly.data.retrofit
 
+import com.koaladev.recycly.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -7,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiConfigAuth {
-    private const val BASE_URL = "https://recycle-api-412072547738.asia-southeast2.run.app/"
+    private const val BASE_URL = BuildConfig.BASE_URL_AUTH
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

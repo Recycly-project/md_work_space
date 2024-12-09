@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.koaladev.recycly.data.pref.UserPreference
+import com.koaladev.recycly.data.pref.dataStore
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.di.Injection
 
@@ -16,6 +18,9 @@ class ViewModelFactory(
         return when {
             modelClass.isAssignableFrom(RecyclyViewModel::class.java) -> {
                 RecyclyViewModel(application, recyclyRepository) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(recyclyRepository, UserPreference.getInstance(application.dataStore)) as T
             }
             else -> {
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

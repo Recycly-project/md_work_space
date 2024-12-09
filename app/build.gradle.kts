@@ -79,5 +79,5 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation("androidx.datastore:datastore-preferences:1.1.1")
-
+    implementation(libs.ktloadingbutton)
 }

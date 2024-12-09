@@ -1,14 +1,14 @@
 package com.koaladev.recycly.di
 
 import android.content.Context
+import com.koaladev.recycly.data.pref.UserPreference
+import com.koaladev.recycly.data.pref.dataStore
 import com.koaladev.recycly.data.repository.RecyclyRepository
-import com.koaladev.recycly.data.retrofit.ApiConfig
-import com.koaladev.recycly.data.retrofit.ApiService
-import retrofit2.Retrofit
+import com.koaladev.recycly.data.retrofit.ApiConfigAuth
 
 object Injection {
     fun provideRecyclyRepository(context: Context): RecyclyRepository {
-        val apiService = ApiConfig.getApiService()
-        return RecyclyRepository.getInstance(apiService)
+        val pref = UserPreference.getInstance(context.dataStore)
+        return RecyclyRepository.getInstance(pref, ApiConfigAuth.getApiService())
     }
 }

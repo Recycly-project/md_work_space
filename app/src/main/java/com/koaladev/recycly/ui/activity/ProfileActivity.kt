@@ -4,25 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import com.koaladev.recycly.R
-import com.koaladev.recycly.data.repository.RecyclyRepository
-import com.koaladev.recycly.data.repository.SessionPreferences
 import com.koaladev.recycly.data.retrofit.ApiConfigAuth
 import com.koaladev.recycly.databinding.ActivityProfileBinding
 import com.koaladev.recycly.helper.ToolbarTitleUpdater
-import com.koaladev.recycly.ui.viewmodel.LoginViewModel
-import com.koaladev.recycly.ui.viewmodel.LoginViewModelFactory
+import com.koaladev.recycly.ui.viewmodel.RecyclyViewModel
+import com.koaladev.recycly.ui.viewmodel.ViewModelFactory
 
 class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
 
     private lateinit var binding: ActivityProfileBinding
     private lateinit var toolbar: MaterialToolbar
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: RecyclyViewModel by viewModels{
+        ViewModelFactory.getInstance(this)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,12 +30,6 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
         enableEdgeToEdge()
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val apiService = ApiConfigAuth.getApiService()
-        val repository = RecyclyRepository.getInstance(apiService)
-        val sessionPreferences = SessionPreferences.getInstance(applicationContext)
-        val factory = LoginViewModelFactory(repository, sessionPreferences)
-        viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
 
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -48,11 +42,13 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
 
         binding.logoutButton.setOnClickListener {
             viewModel.logout()
-            Toast.makeText(this, "Logout berhasil", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+        }
+
+        viewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
         }
     }
 

@@ -1,5 +1,8 @@
 package com.koaladev.recycly.data.repository
 
+import android.util.Log
+import com.koaladev.recycly.data.pref.UserModel
+import com.koaladev.recycly.data.pref.UserPreference
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.data.response.UploadWasteCollectionResponse
@@ -9,12 +12,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import com.koaladev.recycly.data.response.RegisterResponse
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 
-class RecyclyRepository(
+class RecyclyRepository private constructor(
+    private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
         suspend fun uploadImage(file: File): Result<UploadResponse> {
@@ -25,6 +30,7 @@ class RecyclyRepository(
                 val response = apiService.uploadWasteCollection(imagePart)
                 if (response.isSuccessful) {
                     val body = response.body()
+                    Log.d("UploadResponse", "Response Body: $body")
                     if (body != null) {
                         val uploadResponse = UploadResponse(
                             label = body.label,
@@ -56,15 +62,34 @@ class RecyclyRepository(
     }
 
     suspend fun login(email: String, password: String): LoginResponse {
-        return apiService.login(email, password)
+        try {
+            return apiService.login(email, password)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun saveSession(user: UserModel) {
+        userPreference.saveSession(user)
+    }
+
+    fun getSession(): Flow<UserModel> {
+        return userPreference.getSession()
+    }
+
+    suspend fun logout() {
+        userPreference.logout()
     }
 
     companion object {
         @Volatile
         private var instance: RecyclyRepository? = null
-        fun getInstance(apiService: ApiService): RecyclyRepository =
+        fun getInstance(
+            userPreference: UserPreference,
+            apiService: ApiService
+        ): RecyclyRepository =
             instance ?: synchronized(this) {
-                instance ?: RecyclyRepository(apiService)
+                instance ?: RecyclyRepository(userPreference, apiService)
             }.also { instance = it }
     }
 }

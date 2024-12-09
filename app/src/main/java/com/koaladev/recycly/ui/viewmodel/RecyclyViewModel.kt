@@ -8,7 +8,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.data.response.UploadResponse
 import kotlinx.coroutines.launch
@@ -27,6 +29,16 @@ class RecyclyViewModel(application: Application, private val recyclyRepository: 
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    fun getSession(): LiveData<UserModel> {
+        return recyclyRepository.getSession().asLiveData()
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            recyclyRepository.logout()
+        }
+    }
 
     init {
         refreshPoints()

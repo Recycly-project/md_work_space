@@ -1,32 +1,36 @@
 package com.koaladev.recycly.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import com.koaladev.recycly.R
-import com.koaladev.recycly.data.repository.RecyclyRepository
-import com.koaladev.recycly.data.repository.SessionPreferences
-import com.koaladev.recycly.data.retrofit.ApiConfigAuth
 import com.koaladev.recycly.databinding.ActivityMainBinding
 import com.koaladev.recycly.helper.ToolbarTitleUpdater
-import com.koaladev.recycly.ui.viewmodel.LoginViewModel
-import com.koaladev.recycly.ui.viewmodel.LoginViewModelFactory
+import com.koaladev.recycly.ui.viewmodel.RecyclyViewModel
+import com.koaladev.recycly.ui.viewmodel.ViewModelFactory
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), ToolbarTitleUpdater {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var toolbar: MaterialToolbar
+    private val viewModel: RecyclyViewModel by viewModels{
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +41,22 @@ class MainActivity : AppCompatActivity(), ToolbarTitleUpdater {
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
+        lifecycleScope.launch {
+            delay(500)
+            checkUserSession()
+        }
+
         setupEdgeToEdge()
         setupNavigation()
+    }
+
+    private fun checkUserSession() {
+        viewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
