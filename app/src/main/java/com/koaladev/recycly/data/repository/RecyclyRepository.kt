@@ -22,31 +22,6 @@ class RecyclyRepository private constructor(
     private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
-        suspend fun uploadImage(file: File): Result<UploadResponse> {
-            return try {
-                val requestBody = RequestBody.create("image/jpeg".toMediaType(), file)
-                val imagePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
-
-                val response = apiService.uploadWasteCollection(imagePart)
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    Log.d("UploadResponse", "Response Body: $body")
-                    if (body != null) {
-                        val uploadResponse = UploadResponse(
-                            label = body.label,
-                            points = body.points
-                        )
-                        Result.success(uploadResponse)
-                    } else {
-                        Result.failure(Exception("Response body null"))
-                    }
-                } else {
-                    Result.failure(Exception(response.errorBody()?.string() ?: "Unknown error"))
-                }
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
-        }
 
     suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): RegisterResponse {
         val ktpRequestBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())

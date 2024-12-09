@@ -12,11 +12,16 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.repository.RecyclyRepository
+import com.koaladev.recycly.data.repository.WasteRepository
 import com.koaladev.recycly.data.response.UploadResponse
 import kotlinx.coroutines.launch
 import java.io.File
 
-class RecyclyViewModel(application: Application, private val recyclyRepository: RecyclyRepository): AndroidViewModel(application) {
+class RecyclyViewModel(
+    application: Application,
+    private val recyclyRepository: RecyclyRepository,
+    private val wasteRepository: WasteRepository
+): AndroidViewModel(application) {
 
     private val _points = MutableLiveData<Int>()
     val points: LiveData<Int> get() = _points
@@ -75,7 +80,7 @@ class RecyclyViewModel(application: Application, private val recyclyRepository: 
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val result = recyclyRepository.uploadImage(file)
+                val result = wasteRepository.uploadImage(file)
                 _uploadResult.value = result
                 if (result.isSuccess) {
                     result.getOrNull()?.points ?.let {

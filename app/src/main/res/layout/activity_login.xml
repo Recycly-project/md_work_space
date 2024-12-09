@@ -45,11 +45,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAppName">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorSurfaceContainer"
-                android:orientation="vertical"
                 android:padding="16dp">
 
                 <!-- Login Title -->
@@ -57,16 +56,22 @@
                     android:id="@+id/tvLoginTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="16dp"
                     android:text="@string/login_title"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <!-- Email Input -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/tilEmail"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvLoginTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <com.koaladev.recycly.ui.custombutton.CustomEmailField
                         android:id="@+id/etEmail"
@@ -78,10 +83,14 @@
 
                 <!-- Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/tilPassword"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:passwordToggleEnabled="true">
+                    android:layout_marginTop="16dp"
+                    app:passwordToggleEnabled="true"
+                    app:layout_constraintTop_toBottomOf="@id/tilEmail"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <com.koaladev.recycly.ui.custombutton.CustomPasswordField
                         android:id="@+id/etPassword"
@@ -94,35 +103,45 @@
                 <!-- Login Button -->
                 <de.timonknispel.ktloadingbutton.KTLoadingButton
                     android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:backgroundTint="?attr/colorPrimaryContainer"
                     app:buttonName="@string/login_title"
                     app:cornerRadius="8dp"
                     app:allCaps="false"
-                    app:border_thickness="1dp"
-                    app:buttonColor="?attr/colorPrimaryContainer"/>
+                    app:buttonColor="?attr/colorPrimaryContainer"
+                    app:layout_constraintTop_toBottomOf="@id/tilPassword"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <!-- Divider -->
                 <TextView
                     android:id="@+id/tvDivider"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="16dp"
+                    android:layout_marginTop="16dp"
                     android:gravity="center"
                     android:text="@string/or"
-                    android:textColor="?attr/colorSurfaceInverse" />
+                    android:textColor="?attr/colorSurfaceInverse"
+                    app:layout_constraintTop_toBottomOf="@id/btnLogin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <!-- Register Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegister"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:backgroundTint="?attr/colorSecondaryContainer"
                     android:text="@string/register"
-                    app:cornerRadius="16dp" />
+                    app:cornerRadius="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
