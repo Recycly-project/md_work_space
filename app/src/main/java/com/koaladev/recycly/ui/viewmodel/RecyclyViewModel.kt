@@ -10,14 +10,12 @@ import android.widget.RemoteViews
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.koaladev.recycly.R
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.data.repository.WasteRepository
-import com.koaladev.recycly.data.response.UploadResponse
+import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.response.UserResponse
 import com.koaladev.recycly.widget.PointsWidget
 import kotlinx.coroutines.launch
@@ -35,8 +33,8 @@ class RecyclyViewModel(
     private val _currentImageUri = MutableLiveData<Uri?>()
     val currentImageUri: LiveData<Uri?> get() = _currentImageUri
 
-    private val _uploadResult = MutableLiveData<Result<UploadResponse>>()
-    val uploadResult: LiveData<Result<UploadResponse>> get() = _uploadResult
+    private val _uploadResult = MutableLiveData<Result<GetWasteCollectionResponse>>()
+    val uploadResult: LiveData<Result<GetWasteCollectionResponse>> get() = _uploadResult
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -92,25 +90,37 @@ class RecyclyViewModel(
         updateWidget(getApplication())
     }
 
-    fun uploadImage(file: File) {
+    fun uploadImage(id: String, token: String, file: File) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val result = wasteRepository.uploadImage(file)
+                val result = wasteRepository.uploadImage(id, token, file)
                 _uploadResult.value = result
-                if (result.isSuccess) {
-                    result.getOrNull()?.points ?.let {
-                        updatePoints(it)
+                when {
+                    result.isSuccess -> {
+                        val response = result.getOrNull()
+                        if (response?.data != null) {
+                            response.data.wasteCollections.firstOrNull()?.let { wasteCollection ->
+                                addPoints(wasteCollection.points)
+                            }
+                        } else {
+                            Log.e("RecyclyViewModel", "Response data is null")
+                        }
+                    }
+                    result.isFailure -> {
+                        val exception = result.exceptionOrNull()
+                        Log.e("RecyclyViewModel", "Upload failed: ${exception?.message}")
                     }
                 }
             } catch (e: Exception) {
-                Log.e("ViewModel", "Upload failed", e)
+                Log.e("RecyclyViewModel", "Error during uploadImage", e)
                 _uploadResult.value = Result.failure(e)
             } finally {
                 _isLoading.value = false
             }
         }
     }
+
 
     private fun updateWidget(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)

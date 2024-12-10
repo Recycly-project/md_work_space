@@ -5,6 +5,7 @@ import androidx.lifecycle.asLiveData
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.pref.UserPreference
 import com.koaladev.recycly.data.response.GetWasteCollectionResponse
+import com.koaladev.recycly.data.response.HistoryResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.retrofit.ApiService
 import okhttp3.MultipartBody
@@ -20,7 +21,7 @@ class RecyclyRepository private constructor(
     private val apiService: ApiService
 ) {
 
-    suspend fun getWasteCollections(userId: String, token: String): GetWasteCollectionResponse {
+    suspend fun getWasteCollections(userId: String, token: String): HistoryResponse {
         return apiService.getWasteCollections(userId, "Bearer $token")
     }
 

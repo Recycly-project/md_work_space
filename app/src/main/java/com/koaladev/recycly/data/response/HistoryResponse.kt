@@ -2,19 +2,19 @@ package com.koaladev.recycly.data.response
 
 import com.google.gson.annotations.SerializedName
 
-data class GetWasteCollectionResponse(
+data class HistoryResponse(
     @field:SerializedName("status")
     val status: String,
     @field:SerializedName("message")
     val message: String,
     @field:SerializedName("data")
-    val data: DataGetWasteCollection
+    val data: GetHistoryData
 )
-data class DataGetWasteCollection(
-    @field:SerializedName("user")
-    val wasteCollections: List<WasteCollectionsItem>
+data class GetHistoryData(
+    @field:SerializedName("wasteCollections")
+    val wasteCollections: List<HistoryItem>
 )
-data class WasteCollectionsItem(
+data class HistoryItem(
     @field:SerializedName("image")
     val image: String,
     @field:SerializedName("createdAt")

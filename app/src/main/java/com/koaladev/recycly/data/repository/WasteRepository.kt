@@ -1,37 +1,34 @@
 package com.koaladev.recycly.data.repository
 
 import android.util.Log
-import com.koaladev.recycly.data.response.UploadResponse
+import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.retrofit.ApiService
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.Response
 import java.io.File
 
 class WasteRepository(private val apiService: ApiService) {
-    suspend fun uploadImage(file: File): Result<UploadResponse> {
+    suspend fun uploadImage(id: String, token: String, file: File): Result<GetWasteCollectionResponse> {
         return try {
-            val requestBody = RequestBody.create("image/jpeg".toMediaType(), file)
+            val requestBody = file.asRequestBody("image/jpeg".toMediaType())
             val imagePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
-            val response = apiService.uploadWasteCollection(imagePart)
-            Log.d("UploadResponse", "Url: $response")
+            val response = apiService.uploadWasteCollections(id, "Bearer $token", imagePart)
+            Log.d("UploadResponse", "Response: ${response.body()?.data?.wasteCollections}")
             if (response.isSuccessful) {
                 val body = response.body()
-                Log.d("UploadResponse", "Response Body: $body")
                 if (body != null) {
-                    val uploadResponse = UploadResponse(
-                        label = body.label,
-                        points = body.points
-                    )
-                    Result.success(uploadResponse)
+                    Result.success(body)
                 } else {
-                    Result.failure(Exception("Response body null"))
+                    Result.failure(Exception("Response body is null"))
                 }
             } else {
-                Result.failure(Exception(response.errorBody()?.string() ?: "Unknown error"))
+                Result.failure(Exception("Error: ${response.code()} ${response.body()?.data}"))
             }
         } catch (e: Exception) {
+            Log.e("WasteRepository", "Error uploading image", e)
             Result.failure(e)
         }
     }

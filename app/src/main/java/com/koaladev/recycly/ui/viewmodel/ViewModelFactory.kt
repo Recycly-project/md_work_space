@@ -25,7 +25,7 @@ class ViewModelFactory(
                 LoginViewModel(recyclyRepository, UserPreference.getInstance(application.dataStore)) as T
             }
             modelClass.isAssignableFrom(HistoryViewModel::class.java) -> {
-                HistoryViewModel(recyclyRepository, UserPreference.getInstance(application.dataStore)) as T
+                HistoryViewModel(recyclyRepository) as T
             }
             else -> {
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

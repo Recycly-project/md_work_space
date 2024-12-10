@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.koaladev.recycly.data.response.HistoryItem
 import com.koaladev.recycly.data.response.WasteCollectionsItem
 import com.koaladev.recycly.databinding.ItemHistoryListBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class HistoryAdapter : ListAdapter<WasteCollectionsItem, HistoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class HistoryAdapter : ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemHistoryListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -19,7 +20,7 @@ class HistoryAdapter : ListAdapter<WasteCollectionsItem, HistoryAdapter.ViewHold
         holder.bind(getItem(position))
     }
     class ViewHolder(private val binding: ItemHistoryListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: WasteCollectionsItem) {
+        fun bind(item: HistoryItem) {
             binding.apply {
                 tvTitle.text = item.label
                 tvPoints.text = "Points: ${item.points}"
@@ -34,11 +35,11 @@ class HistoryAdapter : ListAdapter<WasteCollectionsItem, HistoryAdapter.ViewHold
         }
     }
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<WasteCollectionsItem>() {
-            override fun areItemsTheSame(oldItem: WasteCollectionsItem, newItem: WasteCollectionsItem): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<HistoryItem>() {
+            override fun areItemsTheSame(oldItem: HistoryItem, newItem: HistoryItem): Boolean {
                 return oldItem.id == newItem.id
             }
-            override fun areContentsTheSame(oldItem: WasteCollectionsItem, newItem: WasteCollectionsItem): Boolean {
+            override fun areContentsTheSame(oldItem: HistoryItem, newItem: HistoryItem): Boolean {
                 return oldItem == newItem
             }
         }
