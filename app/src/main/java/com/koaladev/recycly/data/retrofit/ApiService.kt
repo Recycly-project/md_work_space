@@ -1,9 +1,9 @@
 package com.koaladev.recycly.data.retrofit
 
 import com.koaladev.recycly.data.response.GetWasteCollectionResponse
+import com.koaladev.recycly.data.response.HistoryResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.RegisterResponse
-import com.koaladev.recycly.data.response.UploadResponse
 import com.koaladev.recycly.data.response.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -18,11 +18,6 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService{
-    @Multipart
-    @POST("verifyWasteCollection")
-    suspend fun uploadWasteCollection(
-        @Part image: MultipartBody.Part
-    ): Response<UploadResponse>
 
     @Multipart
     @POST("auth/register")
@@ -47,9 +42,17 @@ interface ApiService{
         @Header("Authorization") token: String
     ): UserResponse
 
+    @Multipart
+    @POST("users/{id}/waste-collections")
+    suspend fun uploadWasteCollections(
+        @Path("id") userId: String,
+        @Header("Authorization") token: String,
+        @Part imagePart: MultipartBody.Part
+    ): Response<GetWasteCollectionResponse>
+
     @GET("users/{id}/waste-collections")
     suspend fun getWasteCollections(
         @Path("id") userId: String,
         @Header("Authorization") token: String
-    ): GetWasteCollectionResponse
+    ): HistoryResponse
 }

@@ -15,6 +15,6 @@ object Injection {
     }
 
     fun provideWasteRepository(context: Context): WasteRepository {
-        return WasteRepository(ApiConfig.getApiService())
+        return WasteRepository(ApiConfigAuth.getApiService())
     }
 }
