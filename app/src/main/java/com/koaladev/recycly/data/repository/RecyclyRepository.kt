@@ -1,18 +1,19 @@
 package com.koaladev.recycly.data.repository
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.pref.UserPreference
 import com.koaladev.recycly.data.response.LoginResponse
-import com.koaladev.recycly.data.response.UploadResponse
-import com.koaladev.recycly.data.response.UploadWasteCollectionResponse
 import com.koaladev.recycly.data.retrofit.ApiService
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
 import com.koaladev.recycly.data.response.RegisterResponse
+import com.koaladev.recycly.data.response.UserResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -22,6 +23,11 @@ class RecyclyRepository private constructor(
     private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
+
+    suspend fun getUserById(id: String, token: String): UserResponse {
+        val user_token = "Bearer $token"
+        return apiService.getUserById(id, user_token)
+    }
 
     suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): RegisterResponse {
         val ktpRequestBody = ktp.asRequestBody("image/*".toMediaTypeOrNull())
@@ -48,8 +54,8 @@ class RecyclyRepository private constructor(
         userPreference.saveSession(user)
     }
 
-    fun getSession(): Flow<UserModel> {
-        return userPreference.getSession()
+    fun getSession(): LiveData<UserModel> {
+        return userPreference.getSession().asLiveData()
     }
 
     suspend fun logout() {

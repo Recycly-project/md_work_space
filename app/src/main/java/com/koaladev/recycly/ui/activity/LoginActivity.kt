@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                         if (isSuccess) {
                             binding.btnLogin.doResult(true)
                             Handler(Looper.getMainLooper()).postDelayed({
-                                viewModel.saveSession(UserModel(token, id, name, email, true))
+                                viewModel.saveSession(UserModel(id, token, name, email, true))
                                 val intent = Intent(this, MainActivity::class.java)
                                 Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

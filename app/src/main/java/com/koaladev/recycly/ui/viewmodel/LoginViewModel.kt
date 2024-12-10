@@ -22,13 +22,12 @@ class LoginViewModel(
 
     fun saveSession(user: UserModel) {
         viewModelScope.launch {
-            userPreference.saveSession(user)
+            repository.saveSession(user)
         }
     }
 
     fun login(email: String, password: String, onResult: (Boolean, String, String, String, String) -> Unit) {
         Log.d("LoginModel", "Melakukan login untuk: $email")
-        Log.d("API_URL", "Endpoint: $BASE_URL_AUTH/auth/login")
         viewModelScope.launch {
             try {
                 val response = repository.login(email, password)

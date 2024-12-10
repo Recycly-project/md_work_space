@@ -34,13 +34,27 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.points.observe(viewLifecycleOwner) { points ->
-            binding.tvPointsValue.text = points.toString()
-            Log.d("HomeFragment", "Points updated: $points")
-        }
-
         binding.btnScanTrash.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_scanActivity)
+        }
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user.isLogin) {
+                viewModel.getUserById(user.id, user.token)
+            }
+        }
+
+        viewModel.userData.observe(viewLifecycleOwner) { result ->
+            val user = result.data.user
+            binding.tvPointsValue.text = user.totalPoints.toString()
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 
