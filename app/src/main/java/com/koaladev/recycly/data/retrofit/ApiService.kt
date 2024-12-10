@@ -1,5 +1,6 @@
 package com.koaladev.recycly.data.retrofit
 
+import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.RegisterResponse
 import com.koaladev.recycly.data.response.UploadResponse
@@ -45,4 +46,10 @@ interface ApiService{
         @Path("id") id: String,
         @Header("Authorization") token: String
     ): UserResponse
+
+    @GET("users/{id}/waste-collections")
+    suspend fun getWasteCollections(
+        @Path("id") userId: String,
+        @Header("Authorization") token: String
+    ): GetWasteCollectionResponse
 }

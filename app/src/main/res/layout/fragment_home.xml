@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
+            android:layout_marginTop="40dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimaryContainer"
-                android:padding="50dp">
+                android:padding="70dp">
 
                 <TextView
                     android:id="@+id/tvPointsTitle"
@@ -71,7 +72,7 @@
             android:id="@+id/cardDepositTrash"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@+id/cardPoints"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorSurfaceContainer"
+                android:="40dp"
                 android:padding="50dp">
 
                 <TextView
@@ -95,7 +97,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnScanTrash"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/scan_trash_title"
@@ -124,116 +126,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorSurfaceContainer"
-                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tvHistoryTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/history_title"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tvHistoryTitle"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" >
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_gravity="start"
-                            android:text="Plastic bottle"
-                            tools:ignore="UnusedAttribute" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textAlignment="textEnd"
-                            android:padding="8dp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorSecondaryContainer"
-                            android:layout_weight="1"
-                            android:text="10 points"
-                            tools:ignore="UnusedAttribute" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_gravity="start"
-                            android:text="Plastic bottle"
-                            tools:ignore="UnusedAttribute" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textAlignment="textEnd"
-                            android:padding="8dp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorSecondaryContainer"
-                            android:layout_weight="1"
-                            android:text="30 points"
-                            tools:ignore="UnusedAttribute" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_gravity="start"
-                            android:text="Plastic bottle"
-                            tools:ignore="UnusedAttribute" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textAlignment="textEnd"
-                            android:padding="8dp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorSecondaryContainer"
-                            android:layout_weight="1"
-                            android:text="26 points"
-                            tools:ignore="UnusedAttribute" />
-                    </TableRow>
-
-                </TableLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 

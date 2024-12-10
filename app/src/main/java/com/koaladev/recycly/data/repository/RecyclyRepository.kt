@@ -4,25 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.pref.UserPreference
+import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.retrofit.ApiService
 import okhttp3.MultipartBody
 import java.io.File
 import com.koaladev.recycly.data.response.RegisterResponse
 import com.koaladev.recycly.data.response.UserResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Response
 
 class RecyclyRepository private constructor(
     private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
+
+    suspend fun getWasteCollections(userId: String, token: String): GetWasteCollectionResponse {
+        return apiService.getWasteCollections(userId, "Bearer $token")
+    }
 
     suspend fun getUserById(id: String, token: String): UserResponse {
         val user_token = "Bearer $token"
