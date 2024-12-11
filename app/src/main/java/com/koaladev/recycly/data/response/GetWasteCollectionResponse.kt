@@ -8,23 +8,12 @@ data class GetWasteCollectionResponse(
     @field:SerializedName("message")
     val message: String,
     @field:SerializedName("data")
-    val data: DataGetWasteCollection
+    val data: WasteCollectionData
 )
-data class DataGetWasteCollection(
-    @field:SerializedName("user")
-    val wasteCollections: List<WasteCollectionsItem>
-)
-data class WasteCollectionsItem(
-    @field:SerializedName("image")
-    val image: String,
-    @field:SerializedName("createdAt")
-    val createdAt: String,
-    @field:SerializedName("id")
-    val id: String,
+
+data class WasteCollectionData(
     @field:SerializedName("label")
     val label: String,
-    @field:SerializedName("userId")
-    val userId: String,
     @field:SerializedName("points")
     val points: Int
 )

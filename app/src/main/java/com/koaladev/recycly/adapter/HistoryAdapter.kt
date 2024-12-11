@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.koaladev.recycly.data.response.HistoryItem
-import com.koaladev.recycly.data.response.WasteCollectionsItem
 import com.koaladev.recycly.databinding.ItemHistoryListBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
