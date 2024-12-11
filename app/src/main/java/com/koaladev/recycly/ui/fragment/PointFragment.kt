@@ -36,6 +36,13 @@ class PointFragment : Fragment() {
             Log.d("PointFragment", "Points updated: $points")
         }
 
+        viewModel.getSession().observe(viewLifecycleOwner) { user ->
+            if (user.isLogin) {
+                viewModel.getUserById(user.id, user.token)
+                setupExchange()
+            }
+        }
+
         setupExchange()
     }
 

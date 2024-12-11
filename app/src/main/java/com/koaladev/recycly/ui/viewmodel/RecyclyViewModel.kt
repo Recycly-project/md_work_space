@@ -4,9 +4,11 @@ import android.app.Application
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -71,6 +73,7 @@ class RecyclyViewModel(
         updatePoints(updatedPoints)
     }
 
+
     fun refreshPoints() {
         val sharedPref = getApplication<Application>().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedPoints = sharedPref.getInt("POINTS", 0)
@@ -96,20 +99,9 @@ class RecyclyViewModel(
             try {
                 val result = wasteRepository.uploadImage(id, token, file)
                 _uploadResult.value = result
-                when {
-                    result.isSuccess -> {
-                        val response = result.getOrNull()
-                        if (response?.data != null) {
-                            response.data.wasteCollections.firstOrNull()?.let { wasteCollection ->
-                                addPoints(wasteCollection.points)
-                            }
-                        } else {
-                            Log.e("RecyclyViewModel", "Response data is null")
-                        }
-                    }
-                    result.isFailure -> {
-                        val exception = result.exceptionOrNull()
-                        Log.e("RecyclyViewModel", "Upload failed: ${exception?.message}")
+                if (result.isSuccess) {
+                    result.getOrNull()?.data?.points.let {
+                        updatePoints(it ?: 0)
                     }
                 }
             } catch (e: Exception) {
@@ -140,15 +132,26 @@ class RecyclyViewModel(
             _isLoading.value = true
             try {
                 val response = recyclyRepository.getUserById(id, token)
-                if (response.status == "success") {
-                    _isLoading.value = false
-                    _userData.value = response
-                    response.data.user.totalPoints.let { newPoints ->
-                        updatePoints(newPoints)
+                when (response.status) {
+                    "success" -> {
+                        _userData.value = response
+                        response.data.user.totalPoints.let { newPoints ->
+                            updatePoints(newPoints)
+                        }
+                    }
+                    "fail" -> {
+                        logout()
+                    }
+                    else -> {
+                        Log.w("RecyclyViewModel", "Unexpected status: ${response.status}")
+                        logout()
                     }
                 }
             } catch (e: Exception) {
                 Log.e("RecyclyViewModel", "Error fetching user data", e)
+                logout()
+            } finally {
+                _isLoading.value = false
             }
         }
     }

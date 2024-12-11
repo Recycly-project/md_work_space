@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.koaladev.recycly.R
@@ -45,6 +46,8 @@ class HomeFragment : Fragment() {
         viewModel.getSession().observe(viewLifecycleOwner) { user ->
             if (user.isLogin) {
                 viewModel.getUserById(user.id, user.token)
+            } else {
+                Toast.makeText(requireContext(), "Session expired", Toast.LENGTH_SHORT).show()
             }
         }
 

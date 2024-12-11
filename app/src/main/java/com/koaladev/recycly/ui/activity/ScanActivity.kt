@@ -139,21 +139,8 @@ class ScanActivity : AppCompatActivity() {
                         }
                     }
                     result.isFailure -> {
-                        val exception = result.exceptionOrNull()
-                        val errorMessage = when (exception) {
-                            is retrofit2.HttpException -> {
-                                try {
-                                    // Mencoba untuk mendapatkan pesan error dari response body
-                                    val errorBody = exception.response()?.errorBody()?.string()
-                                    val errorJson = JSONObject(errorBody ?: "")
-                                    errorJson.optString("message", "Terjadi kesalahan: ${exception.code()}")
-                                } catch (e: Exception) {
-                                    "Terjadi kesalahan: ${exception.code()}"
-                                }
-                            }
-                            is java.net.UnknownHostException -> "Tidak dapat terhubung ke server. Periksa koneksi internet Anda."
-                            else -> exception?.message ?: "Terjadi kesalahan yang tidak diketahui"
-                        }
+                        val errorMessage = result.getOrNull()?.status ?: "Error pada server"
+                        Log.e(TAG, "Gagal mengunggah gambar: $errorMessage")
                         showErrorDialog(errorMessage)
                     }
                 }
@@ -164,16 +151,7 @@ class ScanActivity : AppCompatActivity() {
 
     private fun showResultDialog(response: GetWasteCollectionResponse) {
         try {
-            val wasteCollections = response.data?.wasteCollections
-            if (wasteCollections.isNullOrEmpty()) {
-                showErrorDialog("Data waste collection tidak ditemukan")
-                return
-            }
-
-            // Asumsikan kita hanya mengambil item pertama dari list
-            val firstWasteCollection = wasteCollections.first()
-
-            val earnedPoints = firstWasteCollection.points ?: 0
+            val earnedPoints = response.data.points
             viewModel.addPoints(earnedPoints)
 
             val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -184,8 +162,8 @@ class ScanActivity : AppCompatActivity() {
 
             Log.d("ScanActivity", "Points added: $earnedPoints, Total: ${viewModel.points.value}")
 
-            val message = "Type: ${firstWasteCollection.label ?: "Tidak diketahui"}\n" +
-                    "Status: ${response.status ?: "Tidak diketahui"}\n" +
+            val message = "Status: ${response.status}\n" +
+                    "Jenis: ${response.data.label}\n" +
                     "Point: $earnedPoints"
 
             AlertDialog.Builder(this)

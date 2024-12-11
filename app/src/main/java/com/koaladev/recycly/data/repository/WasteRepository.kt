@@ -16,16 +16,21 @@ class WasteRepository(private val apiService: ApiService) {
             val imagePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
             val response = apiService.uploadWasteCollections(id, "Bearer $token", imagePart)
-            Log.d("UploadResponse", "Response: ${response.body()?.data?.wasteCollections}")
+            Log.d("UploadResponse", "Response: $response")
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    Result.success(body)
+                    val uploadResult = GetWasteCollectionResponse(
+                        status = body.status,
+                        message = body.message,
+                        data = body.data
+                    )
+                    Result.success(uploadResult)
                 } else {
                     Result.failure(Exception("Response body is null"))
                 }
             } else {
-                Result.failure(Exception("Error: ${response.code()} ${response.body()?.data}"))
+                Result.failure(Exception("Error: ${response.errorBody()} ${response.body()?.data}"))
             }
         } catch (e: Exception) {
             Log.e("WasteRepository", "Error uploading image", e)
