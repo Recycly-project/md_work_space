@@ -16,6 +16,6 @@ data class UserFullData(
     @SerializedName("email") val email: String,
     @SerializedName("fullName") val fullName: String,
     @SerializedName("address") val address: String,
-    @SerializedName("ktp") val ktp: String,
+    @SerializedName("ktp") val ktp: Any?,
     @SerializedName("totalPoints") val totalPoints: Int
 )

@@ -1,3 +1,5 @@
+// app/src/main/java/com/koaladev/recycly/ui/fragment/HistoryFragment.kt
+
 package com.koaladev.recycly.ui.fragment
 
 import android.os.Bundle
@@ -7,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.koaladev.recycly.adapter.HistoryAdapter
+import com.koaladev.recycly.adapter.QrHistoryAdapter // Impor adapter baru
 import com.koaladev.recycly.databinding.FragmentHistoryBinding
 import com.koaladev.recycly.ui.viewmodel.HistoryViewModel
 import com.koaladev.recycly.ui.viewmodel.RecyclyViewModel
@@ -17,14 +19,14 @@ class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: RecyclyViewModel by viewModels{
+    private val viewModel: RecyclyViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
-    private val historyViewModel: HistoryViewModel by viewModels{
+    private val historyViewModel: HistoryViewModel by viewModels {
         ViewModelFactory.getInstance(requireContext())
     }
 
-    private lateinit var adapter: HistoryAdapter
+    private lateinit var adapter: QrHistoryAdapter // Ganti adapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
@@ -34,40 +36,35 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvHistoryTitle.text = "Riwayat Scan QR" // Ganti judul
         setupRecyclerView()
         observeViewModel()
     }
 
     private fun setupRecyclerView() {
-        adapter = HistoryAdapter()
-        binding.rvHistoryCollection.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@HistoryFragment.adapter
-        }
+        adapter = QrHistoryAdapter() // Gunakan adapter baru
+        binding.rvHistoryCollection.layoutManager = LinearLayoutManager(context)
+        binding.rvHistoryCollection.adapter = adapter
     }
 
     private fun observeViewModel() {
         viewModel.getSession().observe(viewLifecycleOwner) { user ->
             if (user.isLogin) {
-                historyViewModel.getWasteCollections(user.id, user.token)
+                historyViewModel.getQrHistory(user.id, user.token)
 
-                historyViewModel.wasteCollections.observe(viewLifecycleOwner) { collections ->
-                    adapter.submitList(collections)
+                historyViewModel.qrHistory.observe(viewLifecycleOwner) { history ->
+                    adapter.submitList(history)
                 }
 
                 historyViewModel.error.observe(viewLifecycleOwner) { error ->
-                    // Handle error, e.g., show a Toast or Snackbar
+                    // Tangani error, misal: tampilkan Toast
                 }
 
                 historyViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
                     binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
                 }
-
-            } else {
-                // Fetch waste collections for the user
             }
         }
-
     }
 
     override fun onDestroyView() {

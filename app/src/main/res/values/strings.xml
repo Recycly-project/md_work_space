@@ -12,7 +12,8 @@
     <string name="desposit_trash_title">Desposit Your Trash</string>
     <string name="scan_trash_title">Scan Trash Image</string>
     <string name="history_title">History</string>
-    <string name="take_photo">Ambil foto</string>
+    <string name="take_photo">Scan</string>
+    <string name="upload_image">Unggah Gambar</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -37,5 +38,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+
+
 
 </resources>

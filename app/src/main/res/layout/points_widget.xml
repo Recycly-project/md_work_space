@@ -1,32 +1,28 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.Recycly.AppWidget.Container"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppTheme.AppWidgetContainer"
+    android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/widget_background">
+    android:gravity="center"
+    android:background="@drawable/widget_background_eco">
 
     <TextView
         android:id="@+id/tv_points_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Your Points"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF" />
+        android:text="Poin Recycly Anda"
+        android:textSize="14sp"
+        android:textColor="@color/neutral_white"
+        android:alpha="0.9"/>
 
     <TextView
         android:id="@+id/tv_points_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_points_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:text="0"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF" />
+        android:textColor="@color/neutral_white"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
-</RelativeLayout>
+</LinearLayout>

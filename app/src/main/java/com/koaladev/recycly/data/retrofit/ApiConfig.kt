@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiConfig {
-    private const val BASE_URL = BuildConfig.BASE_URL
+//    private const val BASE_URL = BuildConfig.BASE_URL
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -20,14 +20,14 @@ object ApiConfig {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    private val instance: ApiService by lazy {
-        Retrofit.Builder()
-           .baseUrl(BASE_URL)
-           .client(client)
-           .addConverterFactory(GsonConverterFactory.create())
-           .build()
-           .create(ApiService::class.java)
-    }
+//    private val instance: ApiService by lazy {
+//        Retrofit.Builder()
+//           .baseUrl(BASE_URL)
+//           .client(client)
+//           .addConverterFactory(GsonConverterFactory.create())
+//           .build()
+//           .create(ApiService::class.java)
+//    }
 
-    fun getApiService(): ApiService = instance
+//    fun getApiService(): ApiService = instance
 }

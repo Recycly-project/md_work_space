@@ -4,7 +4,11 @@ import com.koaladev.recycly.data.response.GetWasteCollectionResponse
 import com.koaladev.recycly.data.response.HistoryResponse
 import com.koaladev.recycly.data.response.LoginResponse
 import com.koaladev.recycly.data.response.RegisterResponse
+import com.koaladev.recycly.data.response.ScanQrResponse
 import com.koaladev.recycly.data.response.UserResponse
+import com.koaladev.recycly.data.response.QrHistoryResponse
+import com.koaladev.recycly.data.response.RedeemResponse
+import com.koaladev.recycly.data.response.RewardsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -55,4 +59,32 @@ interface ApiService{
         @Path("id") userId: String,
         @Header("Authorization") token: String
     ): HistoryResponse
+
+    // Endpoint baru untuk scan QR
+    @Multipart
+    @POST("users/{id}/scan-qr")
+    suspend fun scanQr(
+        @Path("id") userId: String,
+        @Header("Authorization") token: String,
+        @Part qrCodeImage: MultipartBody.Part // Mengirim file gambar
+    ): ScanQrResponse
+
+    // Endpoint baru untuk riwayat QR
+    @GET("users/{id}/qr-history")
+    suspend fun getQrHistory(
+        @Path("id") userId: String,
+        @Header("Authorization") token: String
+    ): QrHistoryResponse
+
+    @GET("rewards")
+    suspend fun getRewards(
+        @Header("Authorization") token: String
+    ): RewardsResponse
+
+    @POST("users/{userId}/rewards/{rewardId}/redeem")
+    suspend fun redeemReward(
+        @Path("userId") userId: String,
+        @Path("rewardId") rewardId: String,
+        @Header("Authorization") token: String
+    ): RedeemResponse
 }

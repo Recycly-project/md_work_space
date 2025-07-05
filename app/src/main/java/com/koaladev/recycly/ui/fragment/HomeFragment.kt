@@ -35,7 +35,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnScanTrash.setOnClickListener {
+        // Gunakan ID baru dari ExtendedFloatingActionButton
+        binding.btnScanQr.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_scanActivity)
         }
 
@@ -45,6 +46,7 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.getSession().observe(viewLifecycleOwner) { user ->
             if (user.isLogin) {
+                binding.tvUserName.text = user.name
                 viewModel.getUserById(user.id, user.token)
             } else {
                 Toast.makeText(requireContext(), "Session expired", Toast.LENGTH_SHORT).show()
@@ -53,7 +55,8 @@ class HomeFragment : Fragment() {
 
         viewModel.userData.observe(viewLifecycleOwner) { result ->
             val user = result.data.user
-            binding.tvPointsValue.text = user.totalPoints.toString()
+            // Format angka poin dengan pemisah ribuan
+            binding.tvPointsValue.text = java.text.NumberFormat.getIntegerInstance().format(user.totalPoints)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->

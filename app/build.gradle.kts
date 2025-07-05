@@ -16,8 +16,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL", "\"https://ml-prediction-api-412072547738.asia-southeast2.run.app\"")
-        buildConfigField("String", "BASE_URL_AUTH", "\"https://recycle-api-412072547738.asia-southeast2.run.app\"")
+        buildConfigField("String", "BASE_URL_AUTH", "\"http://103.31.39.197\"")
     }
 
     buildTypes {
@@ -56,6 +55,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.play.services.mlkit.barcode.scanning)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -72,6 +72,9 @@ dependencies {
     implementation ( "androidx.camera:camera-video:${camerax_version}")
     implementation ("androidx.camera:camera-view:${camerax_version}")
     implementation ("androidx.camera:camera-extensions:${camerax_version}")
+
+    // Tambahkan ini untuk ML Kit Barcode Scanning
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
     // networking
     implementation(libs.retrofit)

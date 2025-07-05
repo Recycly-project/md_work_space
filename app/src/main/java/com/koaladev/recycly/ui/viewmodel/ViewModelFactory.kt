@@ -27,6 +27,9 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(HistoryViewModel::class.java) -> {
                 HistoryViewModel(recyclyRepository) as T
             }
+            modelClass.isAssignableFrom(PointViewModel::class.java) -> {
+                PointViewModel(recyclyRepository) as T
+            }
             else -> {
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }
