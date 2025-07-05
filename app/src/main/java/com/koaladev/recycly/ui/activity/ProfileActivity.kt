@@ -33,6 +33,10 @@ class ProfileActivity : AppCompatActivity(), ToolbarTitleUpdater {
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
+        // Mengaktifkan tombol kembali
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         updateToolbarTitle(getString(R.string.bottom_user_profile))

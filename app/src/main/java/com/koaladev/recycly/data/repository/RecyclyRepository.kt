@@ -15,6 +15,9 @@ import com.koaladev.recycly.data.response.UserResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.koaladev.recycly.data.response.QrHistoryResponse
+import com.koaladev.recycly.data.response.RewardsResponse
+import com.koaladev.recycly.data.response.RedeemResponse
 
 class RecyclyRepository private constructor(
     private val userPreference: UserPreference,
@@ -25,9 +28,22 @@ class RecyclyRepository private constructor(
         return apiService.getWasteCollections(userId, "Bearer $token")
     }
 
+    // Fungsi baru untuk mengambil riwayat QR
+    suspend fun getQrHistory(userId: String, token: String): QrHistoryResponse {
+        return apiService.getQrHistory(userId, "Bearer $token")
+    }
+
     suspend fun getUserById(id: String, token: String): UserResponse {
         val user_token = "Bearer $token"
         return apiService.getUserById(id, user_token)
+    }
+
+    suspend fun getRewards(token: String): RewardsResponse {
+        return apiService.getRewards("Bearer $token")
+    }
+
+    suspend fun redeemReward(userId: String, rewardId: String, token: String): RedeemResponse {
+        return apiService.redeemReward(userId, rewardId, "Bearer $token")
     }
 
     suspend fun register(email: String, password: String, fullName: String, address: String, ktp: File): RegisterResponse {

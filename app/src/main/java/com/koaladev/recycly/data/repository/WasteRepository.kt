@@ -2,6 +2,7 @@ package com.koaladev.recycly.data.repository
 
 import android.util.Log
 import com.koaladev.recycly.data.response.GetWasteCollectionResponse
+import com.koaladev.recycly.data.response.ScanQrResponse
 import com.koaladev.recycly.data.retrofit.ApiService
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -34,6 +35,28 @@ class WasteRepository(private val apiService: ApiService) {
             }
         } catch (e: Exception) {
             Log.e("WasteRepository", "Error uploading image", e)
+            Result.failure(e)
+        }
+    }
+    suspend fun scanQrCode(id: String, token: String, imageFile: File): Result<ScanQrResponse> {
+        return try {
+            val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "qrCodeImage", // Nama field harus cocok dengan backend
+                imageFile.name,
+                requestImageFile
+            )
+
+            val response = apiService.scanQr(id, "Bearer $token", imageMultipart)
+            Log.d("ScanQrResponse", "Response: $response")
+
+            if (response.status == "success") {
+                Result.success(response)
+            } else {
+                Result.failure(Exception("Gagal memindai QR: ${response.message}"))
+            }
+        } catch (e: Exception) {
+            Log.e("WasteRepository", "Error scanning QR code", e)
             Result.failure(e)
         }
     }

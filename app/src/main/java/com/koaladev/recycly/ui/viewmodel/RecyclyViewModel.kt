@@ -4,11 +4,9 @@ import android.app.Application
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.RemoteViews
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +16,7 @@ import com.koaladev.recycly.data.pref.UserModel
 import com.koaladev.recycly.data.repository.RecyclyRepository
 import com.koaladev.recycly.data.repository.WasteRepository
 import com.koaladev.recycly.data.response.GetWasteCollectionResponse
+import com.koaladev.recycly.data.response.ScanQrResponse
 import com.koaladev.recycly.data.response.UserResponse
 import com.koaladev.recycly.widget.PointsWidget
 import kotlinx.coroutines.launch
@@ -38,6 +37,10 @@ class RecyclyViewModel(
     private val _uploadResult = MutableLiveData<Result<GetWasteCollectionResponse>>()
     val uploadResult: LiveData<Result<GetWasteCollectionResponse>> get() = _uploadResult
 
+    // LiveData untuk hasil scan QR
+    private val _scanResult = MutableLiveData<Result<ScanQrResponse>>()
+    val scanResult: LiveData<Result<ScanQrResponse>> get() = _scanResult
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -57,6 +60,7 @@ class RecyclyViewModel(
     init {
         refreshPoints()
     }
+
     fun setCurrentImageUri(uri: Uri?) {
         _currentImageUri.value = uri
     }
@@ -73,24 +77,44 @@ class RecyclyViewModel(
         updatePoints(updatedPoints)
     }
 
-
     fun refreshPoints() {
         val sharedPref = getApplication<Application>().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedPoints = sharedPref.getInt("POINTS", 0)
         updatePoints(savedPoints)
     }
-    
+
     private fun updatePoints(newPoints: Int) {
         _points.value = newPoints
-        
+
         val sharedPref = getApplication<Application>().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putInt("POINTS", newPoints)
             apply()
         }
-    
+
         Log.d("RecyclyViewModel", "Points updated: $newPoints")
         updateWidget(getApplication())
+    }
+
+    // Fungsi untuk scan QR
+    fun scanQrCode(id: String, token: String, imageFile: File) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = wasteRepository.scanQrCode(id, token, imageFile)
+                _scanResult.value = result
+                if (result.isSuccess) {
+                    result.getOrNull()?.data?.pointsAdded?.let { points ->
+                        addPoints(points)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("RecyclyViewModel", "Error during scanQrCode", e)
+                _scanResult.value = Result.failure(e)
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     fun uploadImage(id: String, token: String, file: File) {
@@ -99,11 +123,7 @@ class RecyclyViewModel(
             try {
                 val result = wasteRepository.uploadImage(id, token, file)
                 _uploadResult.value = result
-                if (result.isSuccess) {
-                    result.getOrNull()?.data?.points.let {
-                        updatePoints(it ?: 0)
-                    }
-                }
+                // Logika uploadImage tidak lagi menambahkan poin secara langsung
             } catch (e: Exception) {
                 Log.e("RecyclyViewModel", "Error during uploadImage", e)
                 _uploadResult.value = Result.failure(e)
@@ -112,7 +132,6 @@ class RecyclyViewModel(
             }
         }
     }
-
 
     private fun updateWidget(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
